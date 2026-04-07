@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="space-y-6">
-  {{-- Page header --}}
   <div>
     <h1 class="text-2xl font-semibold text-[#111827]">Glossary</h1>
     <p class="mt-2 max-w-3xl text-[#374151]">
@@ -10,7 +9,6 @@
     </p>
   </div>
 
-  {{-- Search --}}
   <div class="bg-white border border-[#D1D5DB] rounded-2xl p-5">
     <label class="text-sm font-medium text-[#111827]">Search terms</label>
     <input
@@ -20,10 +18,11 @@
       class="mt-2 w-full rounded-lg border-[#9CA3AF] text-[#111827] placeholder:text-[#6B7280]"
       autocomplete="off"
     >
-    <p class="text-xs text-[#6B7280] mt-2">Filters by term and definition.</p>
+    <p id="resultCount" class="text-xs text-[#6B7280] mt-2">
+      Showing {{ count($terms) }} terms
+    </p>
   </div>
 
-  {{-- List --}}
   <div id="glossaryList" class="grid lg:grid-cols-2 gap-4">
     @foreach($terms as $t)
       <section class="bg-white border border-[#D1D5DB] rounded-2xl p-5 glossary-item">
@@ -35,9 +34,9 @@
     @endforeach
   </div>
 
-  {{-- No results --}}
   <div id="noResults" class="hidden bg-white border border-[#D1D5DB] rounded-2xl p-6">
-    <p class="text-[#374151]">No matching terms.</p>
+    <p class="text-[#374151] font-medium">No results found.</p>
+    <p class="text-sm text-[#6B7280] mt-1">Try a different keyword or a shorter term.</p>
   </div>
 </div>
 
@@ -46,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('glossarySearch');
   const items = Array.from(document.querySelectorAll('.glossary-item'));
   const noResults = document.getElementById('noResults');
+  const resultCount = document.getElementById('resultCount');
 
   const normalize = (s) => (s || '').toLowerCase();
 
@@ -57,10 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const term = normalize(item.querySelector('.glossary-term')?.textContent);
       const def  = normalize(item.querySelector('.glossary-def')?.textContent);
       const match = !q || term.includes(q) || def.includes(q);
+
       item.classList.toggle('hidden', !match);
+
       if (match) shown++;
     });
 
+    resultCount.textContent = `Showing ${shown} term${shown === 1 ? '' : 's'}`;
     noResults.classList.toggle('hidden', shown !== 0);
   };
 
