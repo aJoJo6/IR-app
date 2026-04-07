@@ -1,53 +1,86 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6 max-w-6xl mx-auto">
+
+  {{-- title --}}
   <div>
-    <h1 class="text-2xl font-semibold text-[#111827]">What Defines an Industrial Revolution?</h1>
-    <p class="mt-2 max-w-3xl text-[#374151]">
-      This page explains the framework used to interpret whether a period represents an industrial revolution
-      rather than incremental technological change.
+    <h1 class="text-2xl font-semibold text-[#111827]">
+      What Defines an Industrial Revolution?
+    </h1>
+    <p class="mt-2 text-[#374151] max-w-3xl">
+      This page explains the framework used to interpret whether a period represents an industrial revolution rather than incremental technological change.
     </p>
   </div>
 
-  <div class="grid lg:grid-cols-2 gap-4">
-    @foreach($criteriaBlocks as $index => $block)
-      <section class="bg-white border border-[#D1D5DB] rounded-2xl p-5">
+  {{-- grid --}}
+  <div class="grid md:grid-cols-2 gap-6">
+
+    @foreach(config('criteria.blocks') as $index => $block)
+
+      {{-- accordion card --}}
+      <div class="bg-white border border-[#D1D5DB] rounded-2xl overflow-hidden">
+
+        {{-- header --}}
         <button
-          type="button"
-          class="w-full flex items-center justify-between text-left font-semibold text-[#111827]"
-          onclick="toggleCriteriaBlock('criteria-block-{{ $index }}', 'criteria-icon-{{ $index }}')"
+          onclick="toggleAccordion({{ $index }})"
+          class="w-full flex justify-between items-center px-5 py-4 text-left font-semibold text-[#111827] hover:bg-[#F9FAFB] focus:outline-none"
         >
-          <span>{{ $block['title'] }}</span>
-          <span id="criteria-icon-{{ $index }}" class="text-[#6B7280]">+</span>
+          {{ $block['title'] }}
+
+          {{-- icon --}}
+          <span id="icon-{{ $index }}" class="text-lg transition-transform">
+            +
+          </span>
         </button>
 
-        <div id="criteria-block-{{ $index }}" class="hidden mt-3">
-          <p class="text-sm text-[#374151] leading-relaxed whitespace-pre-line">
-            {{ $block['body'] }}
-          </p>
+        {{-- content --}}
+        <div
+          id="content-{{ $index }}"
+          class="hidden px-5 pb-5 text-sm text-[#374151] space-y-3"
+        >
+          <p>{{ $block['body'] }}</p>
 
-          @if(!empty($block['bullets']))
-            <ul class="mt-3 text-sm text-[#374151] list-disc pl-5 space-y-1">
-              @foreach($block['bullets'] as $b)
-                <li>{{ $b }}</li>
-              @endforeach
-            </ul>
-          @endif
+          {{-- bullets --}}
+          <ul class="list-disc pl-5 space-y-1">
+            @foreach($block['bullets'] as $bullet)
+              <li>{{ $bullet }}</li>
+            @endforeach
+          </ul>
         </div>
-      </section>
+
+      </div>
+
     @endforeach
+
   </div>
 </div>
 
+{{-- accordion script --}}
 <script>
-function toggleCriteriaBlock(contentId, iconId) {
-  const content = document.getElementById(contentId);
-  const icon = document.getElementById(iconId);
-  const isHidden = content.classList.contains('hidden');
+let openIndex = 0; // default open
 
-  content.classList.toggle('hidden');
-  icon.textContent = isHidden ? '−' : '+';
+function toggleAccordion(index) {
+  const content = document.getElementById(`content-${index}`); // selected content
+  const icon = document.getElementById(`icon-${index}`); // selected icon
+
+  const isOpen = !content.classList.contains('hidden'); // check state
+
+  // close all
+  document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('[id^="icon-"]').forEach(el => el.innerText = '+');
+
+  // open selected
+  if (!isOpen) {
+    content.classList.remove('hidden');
+    icon.innerText = '−';
+  }
 }
+
+// init
+document.addEventListener('DOMContentLoaded', () => {
+  toggleAccordion(0); // open first
+});
 </script>
+
 @endsection

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @php
+  // badge colours
   function badgeClasses($value) {
       $value = strtolower(trim($value));
 
@@ -15,6 +16,8 @@
 
 @section('content')
 <div class="space-y-6">
+
+  {{-- title --}}
   <div>
     <h1 class="text-2xl font-semibold text-[#111827]">
       Evaluation: IR4.0 and IR5.0
@@ -25,6 +28,7 @@
     </p>
   </div>
 
+  {{-- evaluation table --}}
   <div class="bg-white border border-[#D1D5DB] rounded-2xl p-6 overflow-x-auto">
     <table class="w-full text-sm">
       <thead class="text-left text-[#6B7280]">
@@ -38,30 +42,37 @@
       <tbody class="align-top">
         @foreach($criteria as $i => $c)
           <tr class="border-t border-[#E5E7EB]">
+
+            {{-- criterion --}}
             <td class="py-3 pr-4 font-medium text-[#111827]">
               {{ $c }}
             </td>
 
+            {{-- ir4 result --}}
             <td class="py-3 pr-4">
               <span class="inline-flex px-2 py-1 rounded-lg border {{ badgeClasses($ir4[$i] ?? '—') }}">
                 {{ $ir4[$i] ?? '—' }}
               </span>
             </td>
 
+            {{-- ir5 result --}}
             <td class="py-3 pr-4">
               <span class="inline-flex px-2 py-1 rounded-lg border {{ badgeClasses($ir5[$i] ?? '—') }}">
                 {{ $ir5[$i] ?? '—' }}
               </span>
             </td>
+
           </tr>
         @endforeach
       </tbody>
     </table>
   </div>
 
+  {{-- legend --}}
   <div class="grid lg:grid-cols-2 gap-4">
     <div class="bg-white border border-[#D1D5DB] rounded-2xl p-6">
       <h2 class="font-semibold text-[#111827]">Legend</h2>
+
       <ul class="mt-3 text-sm text-[#374151] space-y-2">
         @foreach($legend as $k => $v)
           <li>
@@ -71,13 +82,7 @@
         @endforeach
       </ul>
     </div>
-
-    <div class="bg-white border border-[#D1D5DB] rounded-2xl p-6">
-      <h2 class="font-semibold text-[#111827]">Notes</h2>
-      <p class="mt-2 text-sm text-[#374151] leading-relaxed">
-        The table is intended as a concise overview. Detailed justification for each judgement is provided in the dissertation discussion.
-      </p>
-    </div>
   </div>
+
 </div>
 @endsection

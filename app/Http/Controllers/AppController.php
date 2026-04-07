@@ -6,127 +6,104 @@ use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
+    // shared app data
     private function base(): array
     {
         return [
-            'appName' => 'Industrial Revolutions Explorer',
-            'revolutions' => config('ir.items'),
-            'categories' => config('ir.categories'),
+            'appName' => 'Industrial Revolutions Explorer', // app name
+            'revolutions' => config('ir.items'),            // revolution records
+            'categories' => config('ir.categories'),        // shared categories
         ];
     }
 
-    private function buildComparisonSummary(array $left, array $right, array $categories): array
-    {
-        $summary = [];
-
-        foreach ($categories as $catKey => $catLabel) {
-            $leftText = trim((string)($left['content'][$catKey] ?? ''));
-            $rightText = trim((string)($right['content'][$catKey] ?? ''));
-
-            if ($leftText === '' && $rightText === '') {
-                continue;
-            }
-
-            if ($leftText !== $rightText) {
-                $summary[] = [
-                    'label' => $catLabel,
-                    'left' => $left['title'],
-                    'right' => $right['title'],
-                ];
-            }
-        }
-
-        return $summary;
-    }
-
+    // home page
     public function home()
     {
         return view('pages.home', [
             ...$this->base(),
-            'title' => 'Home',
+            'title' => 'Home', // page title
         ]);
     }
 
+    // explore page
     public function explore()
     {
         return view('pages.explore', [
             ...$this->base(),
-            'title' => 'Explore Revolutions',
+            'title' => 'Explore Revolutions', // page title
         ]);
     }
 
+    // single revolution page
     public function revolution(string $id)
     {
-        $data = $this->base();
-        abort_unless(isset($data['revolutions'][$id]), 404);
+        $data = $this->base(); // shared data
+
+        abort_unless(isset($data['revolutions'][$id]), 404); // valid revolution id
 
         return view('pages.revolution', [
             ...$data,
-            'title' => $data['revolutions'][$id]['title'],
-            'revolution' => $data['revolutions'][$id],
+            'title' => $data['revolutions'][$id]['title'],     // page title
+            'revolution' => $data['revolutions'][$id],         // selected revolution
         ]);
     }
 
+    // compare page
     public function compare(Request $request)
     {
-        $data = $this->base();
+        $data = $this->base(); // shared data
 
-        $leftId = $request->query('left', 'ir1');
-        $rightId = $request->query('right', 'ir4');
-        $diff = $request->boolean('diff');
+        $leftId = $request->query('left', 'ir1');   // left selection
+        $rightId = $request->query('right', 'ir4'); // right selection
 
         if (!isset($data['revolutions'][$leftId])) {
-            $leftId = array_key_first($data['revolutions']);
+            $leftId = array_key_first($data['revolutions']); // fallback left id
         }
 
         if (!isset($data['revolutions'][$rightId])) {
-            $rightId = array_key_first($data['revolutions']);
+            $rightId = array_key_first($data['revolutions']); // fallback right id
         }
 
         if ($leftId === $rightId) {
-            $keys = array_keys($data['revolutions']);
-            $rightId = $keys[1] ?? $leftId;
+            $keys = array_keys($data['revolutions']); // available ids
+            $rightId = $keys[1] ?? $leftId;           // avoid duplicate selection
         }
-
-        $left = $data['revolutions'][$leftId];
-        $right = $data['revolutions'][$rightId];
-
-        $summary = $this->buildComparisonSummary($left, $right, $data['categories']);
 
         return view('pages.compare', [
             ...$data,
-            'title' => 'Compare Revolutions',
-            'left' => $left,
-            'right' => $right,
-            'diff' => $diff,
-            'summary' => $summary,
+            'title' => 'Compare Revolutions',            // page title
+            'left' => $data['revolutions'][$leftId],     // left revolution
+            'right' => $data['revolutions'][$rightId],   // right revolution
         ]);
     }
 
+    // criteria page
     public function criteria()
     {
         return view('pages.criteria', [
-            'title' => 'Criteria',
-            'criteriaBlocks' => config('criteria.blocks'),
+            'title' => 'Criteria',                      // page title
+            'criteriaBlocks' => config('criteria.blocks'), // criteria content
         ]);
     }
 
+    // evaluation page
     public function evaluation()
     {
         return view('pages.evaluation', [
-            'title' => 'Evaluation',
-            'criteria' => config('evaluation.criteria'),
-            'ir4' => config('evaluation.ir4'),
-            'ir5' => config('evaluation.ir5'),
-            'legend' => config('evaluation.legend'),
+            'title' => 'Evaluation',                    // page title
+            'criteria' => config('evaluation.criteria'), // evaluation criteria
+            'ir4' => config('evaluation.ir4'),          // ir4 results
+            'ir5' => config('evaluation.ir5'),          // ir5 results
+            'legend' => config('evaluation.legend'),    // legend text
         ]);
     }
 
+    // glossary page
     public function glossary()
     {
         return view('pages.glossary', [
-            'title' => 'Glossary',
-            'terms' => config('glossary.terms'),
+            'title' => 'Glossary',                   // page title
+            'terms' => config('glossary.terms'),    // glossary terms
         ]);
     }
 }

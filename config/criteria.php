@@ -2,41 +2,66 @@
 
 return [
     'blocks' => [
+
         [
             'title' => 'Systemic scope',
-            'body' => 'Industrial revolutions are treated here as long-run socio-technical transformations. The emphasis is on system-wide changes in production, labour, governance, and economic structure. Not the presence of a single breakthrough technology.',
+            'body' => 'Industrial revolutions are conceptualised as long-run socio-technical transformations characterised by system-wide changes in production, labour, governance, and economic structure, rather than isolated technological innovations.',
             'bullets' => [
-                'Economy-wide relevance (cross-sector impact)',
+                'Economy-wide impact across multiple sectors',
                 'Transformation of production systems and organisational forms',
-                'Sustained change over decades',
+                'Sustained structural change over extended time periods',
             ],
         ],
+
         [
             'title' => 'General-purpose enabling technologies',
-            'body' => 'Historically, revolutions often involve enabling technologies with broad applicability and strong complementarities (e.g., steam, electricity, computing). Impacts typically arrive after diffusion and organisational redesign rather than instantly.',
+            'body' => 'Historically, industrial revolutions are associated with enabling technologies that exhibit broad applicability, strong complementarities, and the capacity to reshape multiple sectors. Their full impact typically depends on diffusion and complementary investments rather than immediate effects.',
             'bullets' => [
-                'Broad applicability across industries',
-                'Complementary investments (skills, infrastructure, standards)',
-                'Delayed productivity effects (adoption lags)',
+                'Broad applicability across industries (GPT characteristics)',
+                'Complementary investments in infrastructure, skills, and standards',
+                'Non-linear impact with delayed productivity effects',
             ],
         ],
+
+        [
+            'title' => 'Production systems and organisational transformation',
+            'body' => 'A defining feature of industrial revolutions is the reorganisation of production systems, including changes in scale, coordination, and integration. This includes shifts in how production is structured, managed, and optimised.',
+            'bullets' => [
+                'Reconfiguration of production processes (e.g. mechanisation, automation, digital integration)',
+                'Changes in scale (mass production, flexible production, platform-based coordination)',
+                'Integration of technologies into end-to-end production systems',
+            ],
+        ],
+
         [
             'title' => 'Labour transformation and control',
-            'body' => 'Revolutions reshape labour: skill demand, autonomy, surveillance/control, and how work is organised. This app highlights labour shifts as a primary comparison dimension.',
+            'body' => 'Industrial revolutions fundamentally reshape labour by altering skill requirements, work organisation, and control mechanisms. These changes influence worker autonomy, job structure, and broader labour market dynamics.',
             'bullets' => [
-                'Task decomposition / recomposition',
-                'Skill shifts and polarisation',
-                'Changes in worker autonomy and control mechanisms',
+                'Shifts in skill demand and labour composition',
+                'Task decomposition, automation, and recomposition of work',
+                'Changes in worker autonomy, surveillance, and control structures',
             ],
         ],
+
         [
-            'title' => 'Governance and institutions',
-            'body' => 'Industrial revolutions are not purely technological. Institutional change and governance response (regulation, standards, labour protections, policy frameworks) influence how technologies diffuse and how benefits/harms are distributed.',
+            'title' => 'Governance and institutional response',
+            'body' => 'Technological change alone does not constitute an industrial revolution. Institutional responses—including regulation, policy frameworks, and standard-setting—play a critical role in shaping how technologies are adopted and how their impacts are distributed.',
             'bullets' => [
-                'Regulatory adaptation (or lag)',
-                'Standard-setting and coordination',
-                'Shifts in labour/capital power relations',
+                'Regulatory adaptation to emerging technologies',
+                'Development of standards and coordination mechanisms',
+                'Shifts in labour-capital relations and institutional power structures',
             ],
         ],
+
+        [
+            'title' => 'Systemic impact and diffusion over time',
+            'body' => 'Industrial revolutions unfold over extended periods rather than producing immediate transformation. Their impact depends on diffusion, organisational adaptation, and complementary change, often resulting in delayed and uneven productivity gains.',
+            'bullets' => [
+                'Delayed productivity gains (productivity paradox)',
+                'Gradual diffusion across sectors and economies',
+                'Dependence on organisational and institutional adaptation',
+            ],
+        ],
+
     ],
 ];
