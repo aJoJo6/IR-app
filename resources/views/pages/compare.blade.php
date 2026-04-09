@@ -94,7 +94,7 @@
             {{ $catLabel }}
           </h3>
 
-          <div class="text-sm text-[#374151] leading-relaxed whitespace-pre-line flex-grow">
+          <div class="text-sm text-[#374151] leading-relaxed whitespace-pre-line grow">
             {{ $left['content'][$catKey] ?? 'No information available.' }}
           </div>
         </div>
@@ -105,7 +105,7 @@
             {{ $catLabel }}
           </h3>
 
-          <div class="text-sm text-[#374151] leading-relaxed whitespace-pre-line flex-grow">
+          <div class="text-sm text-[#374151] leading-relaxed whitespace-pre-line grow">
             {{ $right['content'][$catKey] ?? 'No information available.' }}
           </div>
         </div>

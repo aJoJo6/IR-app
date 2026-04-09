@@ -4,11 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+// app seeder
 class DatabaseSeeder extends Seeder
 {
-
-    //seed the application's database
     public function run(): void
     {
+        $this->call([
+            RevolutionSeeder::class, // seed revolutions
+            EvaluationSeeder::class,
+        ]);
     }
 }

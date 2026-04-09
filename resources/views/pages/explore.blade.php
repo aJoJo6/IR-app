@@ -13,34 +13,34 @@
 
   {{-- cards --}}
   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    @foreach($revolutions as $id => $r)
+    @foreach($revolutions as $r)
 
       {{-- card --}}
       <a
-        href="{{ route('revolutions.show', $id) }}"
+        href="{{ route('revolutions.show', $r->slug) }}"
         class="block bg-white border border-[#D1D5DB] rounded-2xl p-5
                transition transform
-               hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-[1px]"
+               hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-px"
       >
 
         {{-- header --}}
         <div class="flex items-baseline justify-between">
           <span class="text-sm font-semibold text-[#111827]">
-            {{ $r['label'] }}
+            {{ $r->label }}
           </span>
           <span class="text-xs text-[#6B7280]">
-            {{ $r['years'] }}
+            {{ $r->years }}
           </span>
         </div>
 
         {{-- title --}}
         <h2 class="mt-2 font-semibold text-[#111827]">
-          {{ $r['title'] }}
+          {{ $r->title }}
         </h2>
 
         {{-- summary --}}
         <p class="mt-2 text-sm text-[#374151]">
-          {{ $r['summary'] }}
+          {{ $r->summary }}
         </p>
 
       </a>

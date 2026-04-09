@@ -43,24 +43,44 @@
     </a>
   </div>
 
+  {{-- hero image --}}
+  @if(!empty($revolution['hero_image']))
+    <img
+      src="{{ asset('storage/' . $revolution['hero_image']) }}"
+      alt="{{ $revolution['title'] }}"
+      class="w-full rounded-2xl border border-[#D1D5DB]"
+    >
+  @endif
+
   {{-- content grid --}}
-  <div class="grid lg:grid-cols-2 gap-4">
+  <div class="grid lg:grid-cols-2 gap-4 items-stretch">
     @foreach($categories as $key => $label)
 
-      {{-- section --}}
-      <section class="bg-white border border-[#D1D5DB] rounded-2xl p-5
-                      transition transform
-                      hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-[1px]">
-        {{-- heading --}}
-        <h2 class="font-semibold text-[#111827]">
-          {{ $label }}
-        </h2>
+      {{-- section card --}}
+      <a
+        href="{{ route('revolutions.section', ['id' => $revolution['id'], 'section' => $key]) }}"
+        class="block h-full bg-white border border-[#D1D5DB] rounded-2xl p-5
+               transition transform hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-px"
+      >
+        <div class="flex flex-col h-full">
 
-        {{-- body --}}
-        <p class="mt-2 text-sm text-[#374151] leading-relaxed whitespace-pre-line">
-          {{ $revolution['content'][$key] ?? 'No information available for this category.' }}
-        </p>
-      </section>
+          {{-- heading --}}
+          <h2 class="font-semibold text-[#111827]">
+            {{ $label }}
+          </h2>
+
+          {{-- preview --}}
+          <p class="mt-2 text-sm text-[#374151] leading-relaxed whitespace-pre-line">
+            {{ \Illuminate\Support\Str::limit($revolution['content'][$key] ?? 'No information available for this category.', 220) }}
+          </p>
+
+          {{-- link text --}}
+          <p class="mt-auto pt-4 text-sm font-medium text-[#111827]">
+            Read more →
+          </p>
+
+        </div>
+      </a>
 
     @endforeach
   </div>

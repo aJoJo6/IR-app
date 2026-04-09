@@ -60,6 +60,14 @@
           Glossary
         </a>
 
+        {{-- edit --}}
+        <a
+          href="{{ route('admin.login') }}"
+          class="px-3 py-2 rounded transition {{ request()->routeIs('admin.*') ? 'bg-[#1F2937] text-white' : 'text-[#E5E7EB] hover:bg-[#1F2937] hover:text-white' }}">
+          Edit
+        </a>
+        
+
       </nav>
     </div>
   </header>
