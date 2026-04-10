@@ -68,6 +68,8 @@ Route::middleware('admin')
         */
         Route::get('/sections/{section}/edit', 'editSection')->name('sections.edit');
         Route::put('/sections/{section}', 'updateSection')->name('sections.update');
+        Route::post('/sections/{section}/images', 'addSectionImages')->name('sections.images.store');
+        Route::delete('/section-images/{image}', 'deleteSectionImage')->name('sections.images.destroy');
 
         /*
         |--------------------------------------------------------------------------

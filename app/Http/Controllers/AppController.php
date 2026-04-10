@@ -69,7 +69,7 @@ class AppController extends Controller
 
     public function revolutionSection(string $id, string $section)
     {
-        $revolution = Revolution::with('sections')
+        $revolution = Revolution::with(['sections.images'])
             ->where('slug', $id)
             ->firstOrFail();
 
@@ -98,7 +98,7 @@ class AppController extends Controller
             'sectionKey' => $sectionRecord->section_key,
             'sectionTitle' => $sectionRecord->section_title,
             'sectionContent' => $sectionRecord->body,
-            'sectionImage' => $sectionRecord->image_path,
+            'sectionImages' => $sectionRecord->images,
         ]);
     }
 

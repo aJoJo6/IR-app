@@ -3,7 +3,6 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
 
-    {{-- Breadcrumbs --}}
     <nav class="text-xs text-[#6B7280]">
         <a href="{{ route('home') }}" class="hover:text-[#111827]">Home</a>
         <span class="mx-1">/</span>
@@ -16,7 +15,6 @@
         <span class="text-[#111827]">{{ $sectionTitle }}</span>
     </nav>
 
-    {{-- Header --}}
     <div>
         <p class="text-sm text-[#6B7280]">
             {{ $revolution['label'] }} • {{ $revolution['years'] }}
@@ -31,31 +29,30 @@
         </p>
     </div>
 
-    {{-- Image --}}
-    @if(!empty($sectionImage))
-        <div class="flex justify-center">
-            <div class="w-full max-w-3xl">
-                <img
-                    src="{{ asset('storage/' . $sectionImage) }}"
-                    alt="{{ $sectionTitle }} image"
-                    class="w-full max-h-105 rounded-2xl border border-[#D1D5DB] object-cover"
-                >
+    @if($sectionImages->isNotEmpty())
+        <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-4">
+            <h2 class="text-sm font-medium text-[#111827]">Gallery</h2>
 
-                <p class="mt-2 text-center text-xs text-[#6B7280]">
-                    Figure: {{ $sectionTitle }} — {{ $revolution['label'] }}
-                </p>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @foreach($sectionImages as $image)
+                    <figure class="space-y-2">
+                        <img
+                            src="{{ asset('storage/' . $image->image_path) }}"
+                            alt="{{ $sectionTitle }}"
+                            class="h-48 w-full rounded-xl border border-[#D1D5DB] object-cover"
+                        >
+                    </figure>
+                @endforeach
             </div>
         </div>
     @endif
 
-    {{-- Section content --}}
     <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-5">
         <div class="prose prose-sm max-w-none text-[#111827]">
             {!! nl2br(e($sectionContent)) !!}
         </div>
     </div>
 
-    {{-- Other sections --}}
     @if(!empty($categories))
         <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-4">
             <h2 class="text-sm font-medium text-[#111827]">Other sections</h2>
@@ -76,7 +73,6 @@
         </div>
     @endif
 
-    {{-- Back link --}}
     <div>
         <a
             href="{{ route('revolutions.show', $revolution['id']) }}"

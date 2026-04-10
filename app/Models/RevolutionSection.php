@@ -26,6 +26,7 @@ class RevolutionSection extends Model
         return $this->belongsTo(Revolution::class);
     }
 
+    //image
     public function images()
     {
         return $this->hasMany(SectionImage::class)->orderBy('sort_order')->orderBy('id');
