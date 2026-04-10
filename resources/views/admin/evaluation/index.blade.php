@@ -3,54 +3,53 @@
 @section('content')
 <div class="space-y-6">
 
-    <div class="flex items-start justify-between gap-4 flex-wrap">
+    {{-- Header --}}
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
             <h1 class="text-2xl font-semibold text-white">Edit Evaluation</h1>
             <p class="mt-2 text-sm text-[#A3A3A3]">
-                Manage IR4.0 and IR5.0 evaluation values.
+                Manage IR4.0 and IR5.0 evaluation values in the same structure shown to users.
             </p>
         </div>
 
         <a
             href="{{ route('admin.criteria.create') }}"
-            class="px-4 py-2 rounded-xl bg-white text-black text-sm font-medium hover:bg-[#E5E5E5] transition"
+            class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-[#E5E5E5]"
         >
             + Add Criterion
         </a>
     </div>
 
+    {{-- Flash --}}
     @if(session('success'))
         <div class="rounded-xl border border-green-800 bg-green-950 px-4 py-3 text-green-200">
             {{ session('success') }}
         </div>
     @endif
 
+    {{-- Empty State --}}
     @if($criteria->isEmpty())
         <div class="rounded-2xl border border-[#262626] bg-[#0A0A0A] p-6">
             <p class="font-medium text-[#D4D4D4]">No criteria found.</p>
-            <p class="mt-1 text-sm text-[#A3A3A3]">Add a criterion to begin building the evaluation table.</p>
         </div>
     @else
         <div class="overflow-hidden rounded-3xl border border-[#262626] bg-[#0A0A0A]">
             <div class="overflow-x-auto">
-                <table class="w-full table-fixed">
+                <table class="min-w-full">
                     <thead>
                         <tr class="border-b border-[#262626]">
-                            <th class="w-[54%] px-6 py-5 text-left text-sm font-semibold text-[#A3A3A3]">Criterion</th>
-                            <th class="w-[16%] px-6 py-5 text-center text-sm font-semibold text-[#A3A3A3]">IR4.0</th>
-                            <th class="w-[16%] px-6 py-5 text-center text-sm font-semibold text-[#A3A3A3]">IR5.0</th>
-                            <th class="w-[14%] px-6 py-5 text-right text-sm font-semibold text-[#A3A3A3]">Actions</th>
+                            <th class="px-6 py-5 text-left text-sm font-semibold text-[#A3A3A3]">Criterion</th>
+                            <th class="px-6 py-5 text-center text-sm font-semibold text-[#A3A3A3]">IR4.0</th>
+                            <th class="px-6 py-5 text-center text-sm font-semibold text-[#A3A3A3]">IR5.0</th>
+                            <th class="px-6 py-5 text-right text-sm font-semibold text-[#A3A3A3]">Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach($criteria as $criterion)
                             @php
-                                $keyIr4 = strtolower(trim($criterion->title)) . '|ir4';
-                                $keyIr5 = strtolower(trim($criterion->title)) . '|ir5';
-
-                                $ir4 = $evaluationMap->get($keyIr4);
-                                $ir5 = $evaluationMap->get($keyIr5);
+                                $ir4 = $criterion->evaluations->firstWhere('revolution', 'ir4');
+                                $ir5 = $criterion->evaluations->firstWhere('revolution', 'ir5');
 
                                 $badgeClasses = function ($value) {
                                     return match($value) {
@@ -64,21 +63,23 @@
                             @endphp
 
                             <tr class="border-b border-[#1F1F1F] last:border-b-0">
-                                <td class="px-6 py-5 align-top">
-                                    <div class="pr-4 text-base font-medium leading-snug text-white">
-                                        {{ $criterion->title }}
+                                <td class="px-6 py-5 align-middle">
+                                    <div class="font-medium text-white">
+                                        {{ $criterion->name }}
                                     </div>
                                 </td>
 
-                                <td class="px-6 py-5 text-center align-middle">
+                                {{-- IR4 --}}
+                                <td class="px-6 py-5 align-middle text-center">
                                     @if($ir4)
                                         <form method="POST" action="{{ route('admin.evaluation.update.value', $ir4) }}">
                                             @csrf
                                             @method('PUT')
+
                                             <select
                                                 name="value"
                                                 onchange="this.form.submit()"
-                                                class="min-w-32.5 rounded-full border px-4 py-2 text-sm font-medium outline-none {{ $badgeClasses($ir4->value) }}"
+                                                class="rounded-full border px-4 py-2 text-sm font-medium outline-none transition {{ $badgeClasses($ir4->value) }}"
                                             >
                                                 <option value="Meets" @selected($ir4->value === 'Meets')>Meets</option>
                                                 <option value="Partial" @selected($ir4->value === 'Partial')>Partial</option>
@@ -94,7 +95,7 @@
                                             <select
                                                 name="value"
                                                 onchange="this.form.submit()"
-                                                class="min-w-32.5 rounded-full border border-[#404040] bg-[#111111] px-4 py-2 text-sm text-white outline-none"
+                                                class="rounded-full border border-[#404040] bg-[#111111] px-4 py-2 text-sm text-white"
                                             >
                                                 <option value="">Add</option>
                                                 <option value="Meets">Meets</option>
@@ -106,15 +107,17 @@
                                     @endif
                                 </td>
 
-                                <td class="px-6 py-5 text-center align-middle">
+                                {{-- IR5 --}}
+                                <td class="px-6 py-5 align-middle text-center">
                                     @if($ir5)
                                         <form method="POST" action="{{ route('admin.evaluation.update.value', $ir5) }}">
                                             @csrf
                                             @method('PUT')
+
                                             <select
                                                 name="value"
                                                 onchange="this.form.submit()"
-                                                class="min-w-32.5 rounded-full border px-4 py-2 text-sm font-medium outline-none {{ $badgeClasses($ir5->value) }}"
+                                                class="rounded-full border px-4 py-2 text-sm font-medium outline-none transition {{ $badgeClasses($ir5->value) }}"
                                             >
                                                 <option value="Meets" @selected($ir5->value === 'Meets')>Meets</option>
                                                 <option value="Partial" @selected($ir5->value === 'Partial')>Partial</option>
@@ -130,7 +133,7 @@
                                             <select
                                                 name="value"
                                                 onchange="this.form.submit()"
-                                                class="min-w-32.5 rounded-full border border-[#404040] bg-[#111111] px-4 py-2 text-sm text-white outline-none"
+                                                class="rounded-full border border-[#404040] bg-[#111111] px-4 py-2 text-sm text-white"
                                             >
                                                 <option value="">Add</option>
                                                 <option value="Meets">Meets</option>
@@ -142,8 +145,9 @@
                                     @endif
                                 </td>
 
+                                {{-- Actions --}}
                                 <td class="px-6 py-5 align-middle">
-                                    <div class="flex items-center justify-end gap-3">
+                                    <div class="flex justify-end gap-3">
                                         <a
                                             href="{{ route('admin.criteria.edit', $criterion) }}"
                                             class="text-sm font-medium text-white hover:text-[#D4D4D4]"

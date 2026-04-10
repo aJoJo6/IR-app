@@ -8,51 +8,46 @@ use App\Models\Evaluation;
 use App\Models\GlossaryTerm;
 use Illuminate\Http\Request;
 
-// app controller
 class AppController extends Controller
 {
-    // shared app data
     private function base(): array
     {
         return [
-            'appName' => 'Industrial Revolutions Explorer', // app name
-            'categories' => config('ir.categories'), // fallback categories
+            'appName' => 'Industrial Revolutions Explorer',
+            'categories' => config('ir.categories'),
         ];
     }
 
-    // home page
     public function home()
     {
         return view('pages.home', [
             ...$this->base(),
-            'title' => 'Home', // page title
+            'title' => 'Home',
         ]);
     }
 
-    // explore page
     public function explore()
     {
         return view('pages.explore', [
             ...$this->base(),
-            'title' => 'Explore Revolutions', // page title
-            'revolutions' => Revolution::orderBy('id')->get(), // all revolutions
+            'title' => 'Explore Revolutions',
+            'revolutions' => Revolution::orderBy('id')->get(),
         ]);
     }
 
-    // single revolution page
     public function revolution(string $id)
     {
         $revolution = Revolution::with('sections')
             ->where('slug', $id)
-            ->firstOrFail(); // selected revolution
+            ->firstOrFail();
 
         $categories = $revolution->sections
             ->pluck('section_title', 'section_key')
-            ->toArray(); // section list
+            ->toArray();
 
         $content = $revolution->sections
             ->pluck('body', 'section_key')
-            ->toArray(); // section content
+            ->toArray();
 
         $revolutionData = [
             'id' => $revolution->slug,
@@ -66,27 +61,25 @@ class AppController extends Controller
 
         return view('pages.revolution', [
             ...$this->base(),
-            'title' => $revolution->title, // page title
-            'revolution' => $revolutionData, // page data
-            'categories' => $categories, // section labels
+            'title' => $revolution->title,
+            'revolution' => $revolutionData,
+            'categories' => $categories,
         ]);
     }
 
-    // single revolution section page
     public function revolutionSection(string $id, string $section)
     {
         $revolution = Revolution::with('sections')
             ->where('slug', $id)
-            ->firstOrFail(); // selected revolution
+            ->firstOrFail();
 
-        $sectionRecord = $revolution->sections
-            ->firstWhere('section_key', $section); // selected section
+        $sectionRecord = $revolution->sections->firstWhere('section_key', $section);
 
-        abort_unless($sectionRecord, 404); // valid section
+        abort_unless($sectionRecord, 404);
 
         $categories = $revolution->sections
             ->pluck('section_title', 'section_key')
-            ->toArray(); // section list
+            ->toArray();
 
         $revolutionData = [
             'id' => $revolution->slug,
@@ -99,29 +92,28 @@ class AppController extends Controller
 
         return view('pages.revolution-section', [
             ...$this->base(),
-            'title' => $revolution->label . ' - ' . $sectionRecord->section_title, // page title
-            'revolution' => $revolutionData, // page data
-            'categories' => $categories, // section labels
-            'sectionKey' => $sectionRecord->section_key, // section key
-            'sectionTitle' => $sectionRecord->section_title, // section title
-            'sectionContent' => $sectionRecord->body, // section body
-            'sectionImage' => $sectionRecord->image_path, // section image
+            'title' => $revolution->label . ' - ' . $sectionRecord->section_title,
+            'revolution' => $revolutionData,
+            'categories' => $categories,
+            'sectionKey' => $sectionRecord->section_key,
+            'sectionTitle' => $sectionRecord->section_title,
+            'sectionContent' => $sectionRecord->body,
+            'sectionImage' => $sectionRecord->image_path,
         ]);
     }
 
-    // compare page
     public function compare(Request $request)
     {
-        $revolutions = Revolution::with('sections')->orderBy('id')->get(); // all revolutions
+        $revolutions = Revolution::with('sections')->orderBy('id')->get();
 
-        $leftId = $request->query('left', 'ir1'); // left selection
-        $rightId = $request->query('right', 'ir4'); // right selection
+        $leftId = $request->query('left', 'ir1');
+        $rightId = $request->query('right', 'ir4');
 
-        $left = $revolutions->firstWhere('slug', $leftId) ?? $revolutions->first(); // left revolution
-        $right = $revolutions->firstWhere('slug', $rightId) ?? $revolutions->skip(1)->first() ?? $left; // right revolution
+        $left = $revolutions->firstWhere('slug', $leftId) ?? $revolutions->first();
+        $right = $revolutions->firstWhere('slug', $rightId) ?? $revolutions->skip(1)->first() ?? $left;
 
         if ($left->slug === $right->slug) {
-            $right = $revolutions->firstWhere('slug', 'ir4') ?? $revolutions->skip(1)->first() ?? $left; // avoid duplicate
+            $right = $revolutions->firstWhere('slug', 'ir4') ?? $revolutions->skip(1)->first() ?? $left;
         }
 
         $leftData = [
@@ -142,48 +134,57 @@ class AppController extends Controller
             'content' => $right->sections->pluck('body', 'section_key')->toArray(),
         ];
 
-        $categories = $left->sections->pluck('section_title', 'section_key')->toArray(); // compare labels
+        $categories = $left->sections->pluck('section_title', 'section_key')->toArray();
 
         return view('pages.compare', [
             ...$this->base(),
-            'title' => 'Compare Revolutions', // page title
+            'title' => 'Compare Revolutions',
             'revolutions' => $revolutions->mapWithKeys(fn ($r) => [
                 $r->slug => [
                     'id' => $r->slug,
                     'label' => $r->label,
                     'title' => $r->title,
                 ]
-            ])->toArray(), // selector data
-            'categories' => $categories, // compare categories
-            'left' => $leftData, // left side
-            'right' => $rightData, // right side
+            ])->toArray(),
+            'categories' => $categories,
+            'left' => $leftData,
+            'right' => $rightData,
         ]);
     }
 
-    // criteria page
     public function criteria()
     {
         return view('pages.criteria', [
+            ...$this->base(),
             'title' => 'Criteria',
-            'criteriaBlocks' => Criterion::all(),
+            'criteriaBlocks' => Criterion::orderBy('id')->get(),
         ]);
     }
 
-    // evaluation page
     public function evaluation()
     {
+        $criteria = Criterion::orderBy('id')->get();
+
+        $evaluations = Evaluation::orderBy('revolution')->orderBy('id')->get();
+
+        $evaluationMap = $evaluations->keyBy(function ($item) {
+            return strtolower(trim($item->criterion)) . '|' . strtolower(trim($item->revolution));
+        });
+
         return view('pages.evaluation', [
+            ...$this->base(),
             'title' => 'Evaluation',
-            'data' => Evaluation::all(),
+            'criteria' => $criteria,
+            'evaluationMap' => $evaluationMap,
         ]);
     }
 
-    // glossary page
     public function glossary()
     {
         return view('pages.glossary', [
+            ...$this->base(),
             'title' => 'Glossary',
-            'terms' => GlossaryTerm::all(),
+            'terms' => GlossaryTerm::orderBy('term')->get(),
         ]);
     }
 }

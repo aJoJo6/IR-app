@@ -1,54 +1,78 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="max-w-4xl space-y-8">
 
-  <div>
-    <h1 class="text-2xl font-semibold text-[#111827]">Edit Criterion</h1>
-  </div>
-
-  @if($errors->any())
-    <div class="bg-red-50 border border-red-200 text-red-800 rounded-xl px-4 py-3">
-      <ul class="space-y-1 text-sm">
-        @foreach($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-  @endif
-
-  <form
-    method="POST"
-    action="{{ route('admin.criteria.update', $criterion) }}"
-    class="bg-white border border-[#D1D5DB] rounded-2xl p-6 space-y-4"
-  >
-    @csrf
-    @method('PUT')
-
+    {{-- Header --}}
     <div>
-      <label class="block text-sm font-medium text-[#111827]">Title</label>
-      <input type="text" name="title" value="{{ old('title', $criterion->title) }}"
-        class="mt-2 w-full rounded-lg border-[#9CA3AF]">
+        <p class="text-sm font-medium uppercase tracking-wide text-zinc-500">Criterion</p>
+        <h1 class="mt-2 text-4xl font-semibold tracking-tight text-white">Edit Criterion</h1>
+        <p class="mt-3 text-base text-zinc-400">
+            Update the criterion title and description used across the evaluation views.
+        </p>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium text-[#111827]">Description</label>
-      <textarea name="description" rows="8"
-        class="mt-2 w-full rounded-lg border-[#9CA3AF]">{{ old('description', $criterion->description) }}</textarea>
-    </div>
+    {{-- Errors --}}
+    @if($errors->any())
+        <div class="rounded-2xl border border-red-800 bg-red-950 px-5 py-4 text-red-200">
+            <ul class="space-y-1 text-sm">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-    <div class="flex gap-3">
-      <button type="submit"
-        class="px-4 py-2 rounded-lg bg-[#111827] text-white text-sm font-medium hover:bg-[#1F2937] transition">
-        Save
-      </button>
+    {{-- Form --}}
+    <form
+        method="POST"
+        action="{{ route('admin.criteria.update', $criterion) }}"
+        class="space-y-6 rounded-3xl border border-zinc-800 bg-zinc-950 p-8"
+    >
+        @csrf
+        @method('PUT')
 
-      <a href="{{ route('admin.criteria') }}"
-        class="px-4 py-2 rounded-lg border border-[#D1D5DB] text-sm font-medium hover:border-[#9CA3AF] hover:bg-[#F9FAFB] transition">
-        Cancel
-      </a>
-    </div>
-  </form>
+        <div>
+            <label for="title" class="block text-sm font-medium text-zinc-200">
+                Title
+            </label>
+            <input
+                id="title"
+                type="text"
+                name="title"
+                value="{{ old('title', $criterion->title) }}"
+                class="mt-3 w-full rounded-2xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none transition focus:border-zinc-500"
+            >
+        </div>
+
+        <div>
+            <label for="description" class="block text-sm font-medium text-zinc-200">
+                Description
+            </label>
+            <textarea
+                id="description"
+                name="description"
+                rows="8"
+                class="mt-3 w-full rounded-2xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none transition focus:border-zinc-500"
+            >{{ old('description', $criterion->description) }}</textarea>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <button
+                type="submit"
+                class="inline-flex items-center rounded-2xl bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-zinc-200"
+            >
+                Save Changes
+            </button>
+
+            <a
+                href="{{ route('admin.criteria') }}"
+                class="inline-flex items-center rounded-2xl border border-zinc-700 px-5 py-3 text-sm font-medium text-zinc-200 transition hover:bg-zinc-900"
+            >
+                Cancel
+            </a>
+        </div>
+    </form>
 
 </div>
 @endsection

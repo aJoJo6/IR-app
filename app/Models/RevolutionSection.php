@@ -25,4 +25,9 @@ class RevolutionSection extends Model
     {
         return $this->belongsTo(Revolution::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(SectionImage::class)->orderBy('sort_order')->orderBy('id');
+    }
 }

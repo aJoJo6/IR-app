@@ -1,99 +1,90 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
 
-  {{-- header --}}
-  <div>
-
-    {{-- breadcrumb --}}
-    <nav class="text-sm text-[#6B7280]">
-      <a href="{{ route('home') }}" class="hover:text-[#111827]">Home</a>
-      <span class="mx-1">/</span>
-      <a href="{{ route('revolutions.index') }}" class="hover:text-[#111827]">Explore</a>
-      <span class="mx-1">/</span>
-      <a href="{{ route('revolutions.show', $revolution['id']) }}" class="hover:text-[#111827]">
-        {{ $revolution['label'] }}
-      </a>
-      <span class="mx-1">/</span>
-      <span>{{ $sectionTitle }}</span>
+    {{-- Breadcrumbs --}}
+    <nav class="text-xs text-[#6B7280]">
+        <a href="{{ route('home') }}" class="hover:text-[#111827]">Home</a>
+        <span class="mx-1">/</span>
+        <a href="{{ route('revolutions.index') }}" class="hover:text-[#111827]">Explore</a>
+        <span class="mx-1">/</span>
+        <a href="{{ route('revolutions.show', $revolution['id']) }}" class="hover:text-[#111827]">
+            {{ $revolution['label'] }}
+        </a>
+        <span class="mx-1">/</span>
+        <span class="text-[#111827]">{{ $sectionTitle }}</span>
     </nav>
 
-    {{-- meta --}}
-    <div class="mt-2 text-sm text-[#6B7280]">
-      {{ $revolution['label'] }} · {{ $revolution['years'] }}
+    {{-- Header --}}
+    <div>
+        <p class="text-sm text-[#6B7280]">
+            {{ $revolution['label'] }} • {{ $revolution['years'] }}
+        </p>
+
+        <h1 class="mt-1 text-2xl font-semibold text-[#111827]">
+            {{ $sectionTitle }}
+        </h1>
+
+        <p class="mt-2 text-sm text-[#374151]">
+            {{ $revolution['title'] }}
+        </p>
     </div>
 
-    {{-- title --}}
-    <h1 class="mt-1 text-2xl font-semibold text-[#111827]">
-      {{ $sectionTitle }}
-    </h1>
+    {{-- Image --}}
+    @if(!empty($sectionImage))
+        <div class="flex justify-center">
+            <div class="w-full max-w-3xl">
+                <img
+                    src="{{ asset('storage/' . $sectionImage) }}"
+                    alt="{{ $sectionTitle }} image"
+                    class="w-full max-h-105 rounded-2xl border border-[#D1D5DB] object-cover"
+                >
 
-    {{-- subtitle --}}
-    <p class="mt-2 max-w-3xl text-[#374151]">
-      {{ $revolution['title'] }}
-    </p>
-  </div>
+                <p class="mt-2 text-center text-xs text-[#6B7280]">
+                    Figure: {{ $sectionTitle }} — {{ $revolution['label'] }}
+                </p>
+            </div>
+        </div>
+    @endif
 
-  {{-- section image with caption --}}
-  @if(!empty($sectionImage))
-    <figure class="space-y-2">
-      <img
-        src="{{ asset('storage/' . $sectionImage) }}"
-        alt="{{ $sectionTitle }}"
-        class="w-full rounded-2xl border border-[#D1D5DB] shadow-sm"
-      >
+    {{-- Section content --}}
+    <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-5">
+        <div class="prose prose-sm max-w-none text-[#111827]">
+            {!! nl2br(e($sectionContent)) !!}
+        </div>
+    </div>
 
-      <figcaption class="text-xs text-[#6B7280]">
-        Figure: {{ $sectionTitle }} — {{ $revolution['label'] }}
-      </figcaption>
-    </figure>
-  @endif
+    {{-- Other sections --}}
+    @if(!empty($categories))
+        <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-4">
+            <h2 class="text-sm font-medium text-[#111827]">Other sections</h2>
 
-  {{-- content --}}
-  <section class="bg-white border border-[#D1D5DB] rounded-2xl p-6">
-    <p class="text-sm text-[#374151] leading-relaxed whitespace-pre-line">
-      {{ $sectionContent }}
-    </p>
-  </section>
+            <div class="mt-3 flex flex-wrap gap-2">
+                @foreach($categories as $key => $label)
+                    <a
+                        href="{{ route('revolutions.section', [$revolution['id'], $key]) }}"
+                        class="rounded-lg border px-3 py-2 text-sm transition
+                            {{ $sectionKey === $key
+                                ? 'border-[#111827] bg-[#111827] text-white'
+                                : 'border-[#D1D5DB] bg-white text-[#111827] hover:bg-[#F3F4F6]' }}"
+                    >
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
-  {{-- section nav --}}
-  <div class="bg-white border border-[#D1D5DB] rounded-2xl p-5">
-    <h2 class="font-semibold text-[#111827]">Other sections</h2>
-
-    <div class="mt-3 flex flex-wrap gap-2">
-      @foreach($categories as $key => $label)
+    {{-- Back link --}}
+    <div>
         <a
-          href="{{ route('revolutions.section', ['id' => $revolution['id'], 'section' => $key]) }}"
-          class="px-3 py-2 rounded-lg text-sm border transition
-                 {{ $sectionKey === $key
-                    ? 'bg-[#111827] text-white border-[#111827]'
-                    : 'bg-white text-[#111827] border-[#D1D5DB] hover:border-[#9CA3AF] hover:bg-[#F9FAFB]' }}"
+            href="{{ route('revolutions.show', $revolution['id']) }}"
+            class="inline-flex items-center rounded-lg border border-[#D1D5DB] bg-white px-4 py-2 text-sm font-medium text-[#111827] transition hover:bg-[#F3F4F6]"
         >
-          {{ $label }}
+            ← Back to {{ $revolution['label'] }}
         </a>
-      @endforeach
     </div>
-  </div>
-
-  {{-- actions --}}
-  <div class="flex flex-wrap gap-3">
-    <a
-      href="{{ route('revolutions.show', $revolution['id']) }}"
-      class="px-4 py-2 rounded-lg border border-[#D1D5DB] text-sm font-medium
-             hover:border-[#9CA3AF] hover:bg-[#F9FAFB] transition"
-    >
-      Back to {{ $revolution['label'] }}
-    </a>
-
-    <a
-      href="{{ route('analysis.compare', ['left' => $revolution['id'], 'right' => 'ir4']) }}"
-      class="px-4 py-2 rounded-lg bg-[#111827] text-white text-sm font-medium
-             hover:bg-[#1F2937] transition"
-    >
-      Compare this
-    </a>
-  </div>
 
 </div>
 @endsection
