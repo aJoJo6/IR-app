@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
 
   {{-- header --}}
   <div class="flex items-start justify-between gap-6 flex-wrap">
@@ -36,8 +36,7 @@
     {{-- compare action --}}
     <a
       href="{{ route('analysis.compare', ['left' => $revolution['id'], 'right' => 'ir4']) }}"
-      class="px-4 py-2 rounded-lg border border-[#9CA3AF] text-[#111827] bg-white text-sm
-             hover:bg-[#E5E7EB] hover:border-[#6B7280] transition"
+      class="px-4 py-2 rounded-lg border border-[#9CA3AF] text-[#111827] bg-white text-sm hover:bg-[#E5E7EB] hover:border-[#6B7280] transition"
     >
       Compare this
     </a>
@@ -45,43 +44,38 @@
 
   {{-- hero image --}}
   @if(!empty($revolution['hero_image']))
-    <img
-      src="{{ asset('storage/' . $revolution['hero_image']) }}"
-      alt="{{ $revolution['title'] }}"
-      class="w-full rounded-2xl border border-[#D1D5DB]"
-    >
+    <div class="w-full max-w-4xl mx-auto">
+      <div class="aspect-video overflow-hidden rounded-2xl border border-[#D1D5DB]">
+        <img
+          src="{{ asset('storage/' . $revolution['hero_image']) }}"
+          alt="{{ $revolution['title'] }}"
+          class="w-full h-full object-cover"
+        >
+      </div>
+    </div>
   @endif
 
   {{-- content grid --}}
   <div class="grid lg:grid-cols-2 gap-4 items-stretch">
     @foreach($categories as $key => $label)
-
-      {{-- section card --}}
       <a
         href="{{ route('revolutions.section', ['id' => $revolution['id'], 'section' => $key]) }}"
-        class="block h-full bg-white border border-[#D1D5DB] rounded-2xl p-5
-               transition transform hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-px"
+        class="block h-full bg-white border border-[#D1D5DB] rounded-2xl p-5 transition transform hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-px"
       >
         <div class="flex flex-col h-full">
-
-          {{-- heading --}}
           <h2 class="font-semibold text-[#111827]">
             {{ $label }}
           </h2>
 
-          {{-- preview --}}
           <p class="mt-2 text-sm text-[#374151] leading-relaxed whitespace-pre-line">
             {{ \Illuminate\Support\Str::limit($revolution['content'][$key] ?? 'No information available for this category.', 220) }}
           </p>
 
-          {{-- link text --}}
           <p class="mt-auto pt-4 text-sm font-medium text-[#111827]">
             Read more →
           </p>
-
         </div>
       </a>
-
     @endforeach
   </div>
 

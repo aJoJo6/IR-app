@@ -6,9 +6,6 @@
     <div>
         <p class="text-sm text-[#A3A3A3]">{{ $section->revolution->label }}</p>
         <h1 class="mt-1 text-2xl font-semibold text-white">Edit Section</h1>
-        <p class="mt-2 text-sm text-[#A3A3A3]">
-            Update section content and manage gallery images.
-        </p>
     </div>
 
     @if(session('success'))
@@ -74,7 +71,7 @@
     <div class="bg-[#0A0A0A] border border-[#262626] rounded-2xl p-6 space-y-5">
         <div>
             <h2 class="text-lg font-semibold text-white">Gallery Images</h2>
-            <p class="mt-1 text-sm text-[#A3A3A3]">Upload multiple images and delete any you do not want.</p>
+            <p class="mt-1 text-sm text-[#A3A3A3]">Upload images</p>
         </div>
 
         <form
