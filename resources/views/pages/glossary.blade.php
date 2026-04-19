@@ -36,7 +36,7 @@
       {{-- item --}}
       <section class="bg-white border border-[#D1D5DB] rounded-2xl p-5 glossary-item
                       transition transform
-                      hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-[1px]">
+                      hover:shadow-sm hover:border-[#9CA3AF] hover:-translate-y-px">
 
         {{-- term --}}
         <h2 class="font-semibold text-[#111827] glossary-term">
