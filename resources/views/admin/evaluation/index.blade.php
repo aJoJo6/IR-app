@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-6">
 
-    {{-- Header --}}
+    {{-- page header --}}
     <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
             <h1 class="text-2xl font-semibold text-white">Edit Evaluation</h1>
@@ -12,6 +12,7 @@
             </p>
         </div>
 
+        {{-- add criterion button --}}
         <a
             href="{{ route('admin.criteria.create') }}"
             class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-black transition hover:bg-[#E5E5E5]"
@@ -20,19 +21,20 @@
         </a>
     </div>
 
-    {{-- Flash --}}
+    {{-- success message --}}
     @if(session('success'))
         <div class="rounded-xl border border-green-800 bg-green-950 px-4 py-3 text-green-200">
             {{ session('success') }}
         </div>
     @endif
 
-    {{-- Empty State --}}
+    {{-- no criteria state --}}
     @if($criteria->isEmpty())
         <div class="rounded-2xl border border-[#262626] bg-[#0A0A0A] p-6">
             <p class="font-medium text-[#D4D4D4]">No criteria found.</p>
         </div>
     @else
+        {{-- evaluation table --}}
         <div class="overflow-hidden rounded-3xl border border-[#262626] bg-[#0A0A0A]">
             <div class="overflow-x-auto">
                 <table class="min-w-full">
@@ -48,9 +50,13 @@
                     <tbody>
                         @foreach($criteria as $criterion)
                             @php
+                                // get ir4 value
                                 $ir4 = $criterion->evaluations->firstWhere('revolution', 'ir4');
+
+                                // get ir5 value
                                 $ir5 = $criterion->evaluations->firstWhere('revolution', 'ir5');
 
+                                // set badge style
                                 $badgeClasses = function ($value) {
                                     return match($value) {
                                         'Meets' => 'border-green-700/50 bg-green-900/30 text-green-300',
@@ -69,7 +75,7 @@
                                     </div>
                                 </td>
 
-                                {{-- IR4 --}}
+                                {{-- ir4 select --}}
                                 <td class="px-6 py-5 align-middle text-center">
                                     @if($ir4)
                                         <form method="POST" action="{{ route('admin.evaluation.update.value', $ir4) }}">
@@ -88,6 +94,7 @@
                                             </select>
                                         </form>
                                     @else
+                                        {{-- add ir4 value --}}
                                         <form method="POST" action="{{ route('admin.evaluation.store') }}">
                                             @csrf
                                             <input type="hidden" name="criterion_id" value="{{ $criterion->id }}">
@@ -107,7 +114,7 @@
                                     @endif
                                 </td>
 
-                                {{-- IR5 --}}
+                                {{-- ir5 select --}}
                                 <td class="px-6 py-5 align-middle text-center">
                                     @if($ir5)
                                         <form method="POST" action="{{ route('admin.evaluation.update.value', $ir5) }}">
@@ -126,6 +133,7 @@
                                             </select>
                                         </form>
                                     @else
+                                        {{-- add ir5 value --}}
                                         <form method="POST" action="{{ route('admin.evaluation.store') }}">
                                             @csrf
                                             <input type="hidden" name="criterion_id" value="{{ $criterion->id }}">
@@ -145,7 +153,7 @@
                                     @endif
                                 </td>
 
-                                {{-- Actions --}}
+                                {{-- row actions --}}
                                 <td class="px-6 py-5 align-middle">
                                     <div class="flex justify-end gap-3">
                                         <a

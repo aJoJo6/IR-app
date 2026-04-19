@@ -3,6 +3,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
 
+    {{-- breadcrumb navigation --}}
     <nav class="text-xs text-[#6B7280]">
         <a href="{{ route('home') }}" class="hover:text-[#111827]">Home</a>
         <span class="mx-1">/</span>
@@ -15,6 +16,7 @@
         <span class="text-[#111827]">{{ $sectionTitle }}</span>
     </nav>
 
+    {{-- section header --}}
     <div>
         <p class="text-sm text-[#6B7280]">
             {{ $revolution['label'] }} • {{ $revolution['years'] }}
@@ -29,6 +31,7 @@
         </p>
     </div>
 
+    {{-- image gallery --}}
     @if($sectionImages->isNotEmpty())
         <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-4">
             <h2 class="text-sm font-medium text-[#111827]">Gallery</h2>
@@ -47,12 +50,14 @@
         </div>
     @endif
 
+    {{-- section content --}}
     <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-5">
         <div class="prose prose-sm max-w-none text-[#111827]">
             {!! nl2br(e($sectionContent)) !!}
         </div>
     </div>
 
+    {{-- section links --}}
     @if(!empty($categories))
         <div class="rounded-2xl border border-[#D1D5DB] bg-[#F9FAFB] p-4">
             <h2 class="text-sm font-medium text-[#111827]">Other sections</h2>
@@ -73,6 +78,7 @@
         </div>
     @endif
 
+    {{-- back link --}}
     <div>
         <a
             href="{{ route('revolutions.show', $revolution['id']) }}"

@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-8">
 
-  {{-- header --}}
+  {{-- page header --}}
   <div>
     <h1 class="text-3xl font-semibold text-white">Admin</h1>
     <p class="mt-2 text-sm text-[#A3A3A3]">
@@ -11,17 +11,17 @@
     </p>
   </div>
 
-  {{-- flash --}}
+  {{-- success message --}}
   @if(session('success'))
     <div class="bg-green-950 border border-green-800 text-green-200 rounded-2xl px-4 py-3">
       {{ session('success') }}
     </div>
   @endif
 
-  {{-- top blocks --}}
+  {{-- top cards --}}
   <div class="grid lg:grid-cols-4 gap-6">
 
-    {{-- revolutions block --}}
+    {{-- revolutions card --}}
     <section class="bg-[#0A0A0A] border border-[#262626] rounded-2xl p-6">
       <h2 class="text-xl font-semibold text-white">Industrial Revolutions</h2>
       <p class="mt-2 text-sm text-[#A3A3A3]">
@@ -29,7 +29,7 @@
       </p>
     </section>
 
-    {{-- criteria block --}}
+    {{-- criteria card --}}
     <a
       href="{{ route('admin.criteria') }}"
       class="block bg-[#0A0A0A] border border-[#262626] rounded-2xl p-6 hover:border-[#404040] hover:bg-[#111111] transition"
@@ -40,7 +40,7 @@
       </p>
     </a>
 
-    {{-- evaluation block --}}
+    {{-- evaluation card --}}
     <a
       href="{{ route('admin.evaluation') }}"
       class="block bg-[#0A0A0A] border border-[#262626] rounded-2xl p-6 hover:border-[#404040] hover:bg-[#111111] transition"
@@ -51,7 +51,7 @@
       </p>
     </a>
 
-    {{-- glossary block --}}
+    {{-- glossary card --}}
     <a
       href="{{ route('admin.glossary') }}"
       class="block bg-[#0A0A0A] border border-[#262626] rounded-2xl p-6 hover:border-[#404040] hover:bg-[#111111] transition"
@@ -79,6 +79,7 @@
               <p class="mt-1 text-sm text-[#A3A3A3]">{{ $revolution->years }}</p>
             </div>
 
+            {{-- edit revolution link --}}
             <a
               href="{{ route('admin.revolutions.edit', $revolution) }}"
               class="px-4 py-2 rounded-lg border border-[#404040] text-sm text-white hover:bg-[#171717] transition"
@@ -87,6 +88,7 @@
             </a>
           </div>
 
+          {{-- section list --}}
           <div class="mt-4 grid md:grid-cols-2 gap-3">
             @foreach($revolution->sections as $section)
               <div class="border border-[#262626] rounded-xl p-4 flex items-start justify-between gap-4 bg-[#0F0F0F]">
@@ -97,6 +99,7 @@
                   </p>
                 </div>
 
+                {{-- edit section link --}}
                 <a
                   href="{{ route('admin.sections.edit', $section) }}"
                   class="text-sm font-medium text-white hover:underline whitespace-nowrap"

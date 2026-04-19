@@ -3,17 +3,20 @@
 @section('content')
 <div class="max-w-4xl space-y-6">
 
+    {{-- page header --}}
     <div>
         <p class="text-sm text-[#A3A3A3]">{{ $section->revolution->label }}</p>
         <h1 class="mt-1 text-2xl font-semibold text-white">Edit Section</h1>
     </div>
 
+    {{-- success message --}}
     @if(session('success'))
         <div class="bg-green-950 border border-green-800 text-green-200 rounded-xl px-4 py-3">
             {{ session('success') }}
         </div>
     @endif
 
+    {{-- validation errors --}}
     @if($errors->any())
         <div class="bg-red-950 border border-red-800 text-red-200 rounded-xl px-4 py-3">
             <ul class="space-y-1 text-sm">
@@ -24,6 +27,7 @@
         </div>
     @endif
 
+    {{-- edit section form --}}
     <form
         method="POST"
         action="{{ route('admin.sections.update', $section) }}"
@@ -32,6 +36,7 @@
         @csrf
         @method('PUT')
 
+        {{-- section title input --}}
         <div>
             <label class="block text-sm font-medium text-white">Section Title</label>
             <input
@@ -42,6 +47,7 @@
             >
         </div>
 
+        {{-- body input --}}
         <div>
             <label class="block text-sm font-medium text-white">Body</label>
             <textarea
@@ -51,6 +57,7 @@
             >{{ old('body', $section->body) }}</textarea>
         </div>
 
+        {{-- form actions --}}
         <div class="flex gap-3">
             <button
                 type="submit"
@@ -68,12 +75,14 @@
         </div>
     </form>
 
+    {{-- gallery section --}}
     <div class="bg-[#0A0A0A] border border-[#262626] rounded-2xl p-6 space-y-5">
         <div>
             <h2 class="text-lg font-semibold text-white">Gallery Images</h2>
             <p class="mt-1 text-sm text-[#A3A3A3]">Upload images</p>
         </div>
 
+        {{-- image upload form --}}
         <form
             method="POST"
             action="{{ route('admin.sections.images.store', $section) }}"
@@ -101,9 +110,11 @@
             </button>
         </form>
 
+        {{-- empty gallery state --}}
         @if($section->images->isEmpty())
             <p class="text-sm text-[#A3A3A3]">No gallery images uploaded yet.</p>
         @else
+            {{-- image grid --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($section->images as $image)
                     <div class="rounded-2xl border border-[#262626] bg-[#111111] p-3 space-y-3">
@@ -113,6 +124,7 @@
                             class="h-36 w-full rounded-xl object-cover"
                         >
 
+                        {{-- delete image form --}}
                         <form
                             method="POST"
                             action="{{ route('admin.sections.images.destroy', $image) }}"

@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-4xl space-y-8">
 
-    {{-- Header --}}
+    {{-- page header --}}
     <div>
         <p class="text-sm font-medium uppercase tracking-wide text-zinc-500">Criterion</p>
         <h1 class="mt-2 text-4xl font-semibold tracking-tight text-white">Edit Criterion</h1>
@@ -12,7 +12,7 @@
         </p>
     </div>
 
-    {{-- Errors --}}
+    {{-- validation errors --}}
     @if($errors->any())
         <div class="rounded-2xl border border-red-800 bg-red-950 px-5 py-4 text-red-200">
             <ul class="space-y-1 text-sm">
@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    {{-- Form --}}
+    {{-- edit form --}}
     <form
         method="POST"
         action="{{ route('admin.criteria.update', $criterion) }}"
@@ -32,6 +32,7 @@
         @csrf
         @method('PUT')
 
+        {{-- title input --}}
         <div>
             <label for="title" class="block text-sm font-medium text-zinc-200">
                 Title
@@ -45,6 +46,7 @@
             >
         </div>
 
+        {{-- description input --}}
         <div>
             <label for="description" class="block text-sm font-medium text-zinc-200">
                 Description
@@ -57,6 +59,7 @@
             >{{ old('description', $criterion->description) }}</textarea>
         </div>
 
+        {{-- form actions --}}
         <div class="flex flex-wrap gap-3">
             <button
                 type="submit"

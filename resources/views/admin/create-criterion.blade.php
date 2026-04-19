@@ -3,10 +3,12 @@
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
 
+  {{-- page title --}}
   <div>
     <h1 class="text-2xl font-semibold text-white">Add Criterion</h1>
   </div>
 
+  {{-- validation errors --}}
   @if($errors->any())
     <div class="bg-red-950 border border-red-800 text-red-200 rounded-xl px-4 py-3">
       <ul class="space-y-1 text-sm">
@@ -17,6 +19,7 @@
     </div>
   @endif
 
+  {{-- create criterion form --}}
   <form
     method="POST"
     action="{{ route('admin.criteria.store') }}"
@@ -24,6 +27,7 @@
   >
     @csrf
 
+    {{-- title input --}}
     <div>
       <label class="block text-sm font-medium text-white">Title</label>
       <input
@@ -34,6 +38,7 @@
       >
     </div>
 
+    {{-- description input --}}
     <div>
       <label class="block text-sm font-medium text-white">Description</label>
       <textarea
@@ -42,6 +47,7 @@
         class="mt-2 w-full rounded-lg border border-[#404040] bg-[#111111] text-white px-3 py-2">{{ old('description') }}</textarea>
     </div>
 
+    {{-- form actions --}}
     <div class="flex gap-3">
       <button
         type="submit"

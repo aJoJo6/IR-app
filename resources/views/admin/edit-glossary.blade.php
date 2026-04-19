@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-3xl space-y-6">
 
-    {{-- Header --}}
+    {{-- page header --}}
     <div>
         <p class="text-sm text-[#A3A3A3]">Glossary</p>
         <h1 class="mt-1 text-2xl font-semibold text-white">
@@ -14,7 +14,7 @@
         </p>
     </div>
 
-    {{-- Errors --}}
+    {{-- validation errors --}}
     @if($errors->any())
         <div class="bg-red-950 border border-red-800 text-red-200 rounded-xl px-4 py-3">
             <ul class="space-y-1 text-sm">
@@ -25,7 +25,7 @@
         </div>
     @endif
 
-    {{-- Form --}}
+    {{-- edit form --}}
     <form
         method="POST"
         action="{{ route('admin.glossary.update', $term) }}"
@@ -34,6 +34,7 @@
         @csrf
         @method('PUT')
 
+        {{-- term input --}}
         <div>
             <label class="block text-sm font-medium text-white">Term</label>
             <input
@@ -44,6 +45,7 @@
             >
         </div>
 
+        {{-- definition input --}}
         <div>
             <label class="block text-sm font-medium text-white">Definition</label>
             <textarea
@@ -53,6 +55,7 @@
             >{{ old('definition', $term->definition) }}</textarea>
         </div>
 
+        {{-- form actions --}}
         <div class="flex gap-3">
             <button
                 type="submit"

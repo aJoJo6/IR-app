@@ -3,6 +3,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto space-y-6">
 
+    {{-- page header --}}
     <div>
         <h1 class="text-2xl font-semibold text-[#111827]">
             Evaluation: IR4.0 and IR5.0
@@ -12,8 +13,10 @@
         </p>
     </div>
 
+    {{-- evaluation table container --}}
     <div class="rounded-3xl border border-[#D1D5DB] bg-[#F9FAFB] p-6">
         @if($criteria->isEmpty())
+            {{-- empty state --}}
             <p class="text-sm text-[#6B7280]">No evaluation criteria available.</p>
         @else
             <table class="w-full">
@@ -28,12 +31,19 @@
                 <tbody>
                     @foreach($criteria as $criterion)
                         @php
+                            // build ir4 key
                             $keyIr4 = strtolower(trim($criterion->title)) . '|ir4';
+
+                            // build ir5 key
                             $keyIr5 = strtolower(trim($criterion->title)) . '|ir5';
 
+                            // get ir4 evaluation
                             $ir4 = $evaluationMap->get($keyIr4);
+
+                            // get ir5 evaluation
                             $ir5 = $evaluationMap->get($keyIr5);
 
+                            // badge style function
                             $badgeClass = fn($value) => match($value) {
                                 'Meets' => 'bg-green-100 text-green-800 border-green-200',
                                 'Partial' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -43,16 +53,19 @@
                         @endphp
 
                         <tr class="border-b border-[#F3F4F6] last:border-b-0">
+                            {{-- criterion title --}}
                             <td class="py-4 text-sm text-[#111827]">
                                 {{ $criterion->title }}
                             </td>
 
+                            {{-- ir4 value --}}
                             <td class="py-4 text-center">
                                 <span class="inline-flex rounded-full border px-3 py-1 text-sm {{ $ir4 ? $badgeClass($ir4->value) : '' }}">
                                     {{ $ir4->value ?? '—' }}
                                 </span>
                             </td>
 
+                            {{-- ir5 value --}}
                             <td class="py-4 text-center">
                                 <span class="inline-flex rounded-full border px-3 py-1 text-sm {{ $ir5 ? $badgeClass($ir5->value) : '' }}">
                                     {{ $ir5->value ?? '—' }}

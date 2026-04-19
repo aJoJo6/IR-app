@@ -3,6 +3,7 @@
 @section('content')
 <div class="space-y-6">
 
+    {{-- page header --}}
     <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
             <h1 class="text-2xl font-semibold text-white">Edit Evaluation</h1>
@@ -11,6 +12,7 @@
             </p>
         </div>
 
+        {{-- add criterion button --}}
         <a
             href="{{ route('admin.criteria.create') }}"
             class="px-4 py-2 rounded-xl bg-white text-black text-sm font-medium hover:bg-[#E5E5E5] transition"
@@ -19,18 +21,21 @@
         </a>
     </div>
 
+    {{-- success message --}}
     @if(session('success'))
         <div class="rounded-xl border border-green-800 bg-green-950 px-4 py-3 text-green-200">
             {{ session('success') }}
         </div>
     @endif
 
+    {{-- empty state --}}
     @if($criteria->isEmpty())
         <div class="rounded-2xl border border-[#262626] bg-[#0A0A0A] p-6">
             <p class="font-medium text-[#D4D4D4]">No criteria found.</p>
             <p class="mt-1 text-sm text-[#A3A3A3]">Add a criterion to begin building the evaluation table.</p>
         </div>
     @else
+        {{-- evaluation table --}}
         <div class="overflow-hidden rounded-3xl border border-[#262626] bg-[#0A0A0A]">
             <div class="overflow-x-auto">
                 <table class="w-full table-fixed">
@@ -46,12 +51,19 @@
                     <tbody>
                         @foreach($criteria as $criterion)
                             @php
+                                // build ir4 lookup key
                                 $keyIr4 = strtolower(trim($criterion->title)) . '|ir4';
+
+                                // build ir5 lookup key
                                 $keyIr5 = strtolower(trim($criterion->title)) . '|ir5';
 
+                                // get ir4 evaluation
                                 $ir4 = $evaluationMap->get($keyIr4);
+
+                                // get ir5 evaluation
                                 $ir5 = $evaluationMap->get($keyIr5);
 
+                                // set badge styles
                                 $badgeClasses = function ($value) {
                                     return match($value) {
                                         'Meets' => 'border-green-700/50 bg-green-900/30 text-green-300',
@@ -70,6 +82,7 @@
                                     </div>
                                 </td>
 
+                                {{-- ir4 column --}}
                                 <td class="px-6 py-5 text-center align-middle">
                                     @if($ir4)
                                         <form method="POST" action="{{ route('admin.evaluation.update.value', $ir4) }}">
@@ -87,6 +100,7 @@
                                             </select>
                                         </form>
                                     @else
+                                        {{-- create ir4 evaluation --}}
                                         <form method="POST" action="{{ route('admin.evaluation.store') }}">
                                             @csrf
                                             <input type="hidden" name="criterion_id" value="{{ $criterion->id }}">
@@ -106,6 +120,7 @@
                                     @endif
                                 </td>
 
+                                {{-- ir5 column --}}
                                 <td class="px-6 py-5 text-center align-middle">
                                     @if($ir5)
                                         <form method="POST" action="{{ route('admin.evaluation.update.value', $ir5) }}">
@@ -123,6 +138,7 @@
                                             </select>
                                         </form>
                                     @else
+                                        {{-- create ir5 evaluation --}}
                                         <form method="POST" action="{{ route('admin.evaluation.store') }}">
                                             @csrf
                                             <input type="hidden" name="criterion_id" value="{{ $criterion->id }}">
@@ -142,6 +158,7 @@
                                     @endif
                                 </td>
 
+                                {{-- row actions --}}
                                 <td class="px-6 py-5 align-middle">
                                     <div class="flex items-center justify-end gap-3">
                                         <a

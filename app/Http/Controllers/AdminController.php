@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
+    // show admin login page
     public function loginForm()
     {
         return view('admin.login', [
@@ -20,6 +21,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // handle admin login
     public function login(Request $request)
     {
         if ($request->input('password') === config('admin.password')) {
@@ -31,6 +33,7 @@ class AdminController extends Controller
         return back()->with('error', 'Invalid password');
     }
 
+    // log admin out
     public function logout()
     {
         session()->forget('is_admin');
@@ -38,6 +41,7 @@ class AdminController extends Controller
         return redirect()->route('home');
     }
 
+    // show admin dashboard
     public function index()
     {
         return view('admin.index', [
@@ -46,6 +50,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // show criteria list
     public function criteria()
     {
         return view('admin.criteria', [
@@ -54,12 +59,14 @@ class AdminController extends Controller
         ]);
     }
 
+    // show evaluation matrix
     public function evaluation()
     {
         $criteria = Criterion::orderBy('id')->get();
 
         $evaluations = Evaluation::orderBy('revolution')->orderBy('id')->get();
 
+        // map evaluations by criterion and revolution
         $evaluationMap = $evaluations->keyBy(function ($item) {
             return strtolower(trim($item->criterion)) . '|' . strtolower(trim($item->revolution));
         });
@@ -71,6 +78,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // show glossary list
     public function glossary()
     {
         return view('admin.glossary', [
@@ -79,6 +87,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // show revolution edit page
     public function editRevolution(Revolution $revolution)
     {
         return view('admin.edit-revolution', [
@@ -87,6 +96,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // update revolution details
     public function updateRevolution(Request $request, Revolution $revolution)
     {
         $validated = $request->validate([
@@ -97,6 +107,7 @@ class AdminController extends Controller
             'hero_image' => 'nullable|image|max:2048',
         ]);
 
+        // replace hero image if uploaded
         if ($request->hasFile('hero_image')) {
             if ($revolution->hero_image) {
                 Storage::disk('public')->delete($revolution->hero_image);
@@ -112,6 +123,7 @@ class AdminController extends Controller
             ->with('success', 'Revolution updated successfully.');
     }
 
+    // show section edit page
     public function editSection(RevolutionSection $section)
     {
         return view('admin.edit-section', [
@@ -120,6 +132,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // update section content
     public function updateSection(Request $request, RevolutionSection $section)
     {
         $validated = $request->validate([
@@ -134,6 +147,7 @@ class AdminController extends Controller
             ->with('success', 'Section updated successfully.');
     }
 
+    // add images to section gallery
     public function addSectionImages(Request $request, RevolutionSection $section)
     {
         $validated = $request->validate([
@@ -157,6 +171,7 @@ class AdminController extends Controller
             ->with('success', 'Images added successfully.');
     }
 
+    // delete section image
     public function deleteSectionImage(SectionImage $image)
     {
         if ($image->image_path) {
@@ -171,6 +186,7 @@ class AdminController extends Controller
             ->with('success', 'Image deleted successfully.');
     }
 
+    // show criterion edit page
     public function editCriterion(Criterion $criterion)
     {
         return view('admin.edit-criterion', [
@@ -179,6 +195,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // update criterion
     public function updateCriterion(Request $request, Criterion $criterion)
     {
         $validated = $request->validate([
@@ -190,6 +207,7 @@ class AdminController extends Controller
 
         $criterion->update($validated);
 
+        // keep linked evaluations in sync
         if ($oldTitle !== $validated['title']) {
             Evaluation::where('criterion', $oldTitle)->update([
                 'criterion' => $validated['title'],
@@ -201,6 +219,7 @@ class AdminController extends Controller
             ->with('success', 'Criterion updated successfully.');
     }
 
+    // show glossary term edit page
     public function editGlossary(GlossaryTerm $term)
     {
         return view('admin.edit-glossary', [
@@ -209,6 +228,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // update glossary term
     public function updateGlossary(Request $request, GlossaryTerm $term)
     {
         $validated = $request->validate([
@@ -223,6 +243,7 @@ class AdminController extends Controller
             ->with('success', 'Glossary term updated successfully.');
     }
 
+    // show evaluation edit page
     public function editEvaluation(Evaluation $evaluation)
     {
         return view('admin.edit-evaluation', [
@@ -231,6 +252,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // update full evaluation
     public function updateEvaluation(Request $request, Evaluation $evaluation)
     {
         $validated = $request->validate([
@@ -246,6 +268,7 @@ class AdminController extends Controller
             ->with('success', 'Evaluation updated successfully.');
     }
 
+    // update only evaluation value
     public function updateEvaluationValue(Request $request, Evaluation $evaluation)
     {
         $validated = $request->validate([
@@ -261,6 +284,7 @@ class AdminController extends Controller
             ->with('success', 'Evaluation value updated successfully.');
     }
 
+    // save evaluation for one criterion
     public function storeEvaluationCriterion(Request $request)
     {
         $validated = $request->validate([
@@ -286,6 +310,7 @@ class AdminController extends Controller
             ->with('success', 'Evaluation value saved successfully.');
     }
 
+    // update evaluation matrix
     public function updateEvaluationMatrix(Request $request)
     {
         $validated = $request->validate([
@@ -332,6 +357,7 @@ class AdminController extends Controller
             ->with('success', 'Evaluation matrix updated successfully.');
     }
 
+    // show create criterion page
     public function createCriterion()
     {
         return view('admin.create-criterion', [
@@ -339,6 +365,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // store new criterion
     public function storeCriterion(Request $request)
     {
         $validated = $request->validate([
@@ -353,6 +380,7 @@ class AdminController extends Controller
             ->with('success', 'Criterion added successfully.');
     }
 
+    // show create glossary page
     public function createGlossary()
     {
         return view('admin.create-glossary', [
@@ -360,6 +388,7 @@ class AdminController extends Controller
         ]);
     }
 
+    // store new glossary term
     public function storeGlossary(Request $request)
     {
         $validated = $request->validate([
@@ -374,6 +403,7 @@ class AdminController extends Controller
             ->with('success', 'Glossary term added successfully.');
     }
 
+    // delete criterion and linked evaluations
     public function destroyEvaluationCriterion(Criterion $criterion)
     {
         Evaluation::where('criterion', $criterion->title)->delete();

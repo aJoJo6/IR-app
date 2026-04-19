@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
 
-  {{-- title --}}
+  {{-- page title --}}
   <div>
     <h1 class="text-2xl font-semibold text-white">Edit Revolution</h1>
     <p class="mt-2 text-[#A3A3A3]">
@@ -11,7 +11,7 @@
     </p>
   </div>
 
-  {{-- errors --}}
+  {{-- validation errors --}}
   @if($errors->any())
     <div class="bg-red-950 border border-red-800 text-red-200 rounded-xl px-4 py-3">
       <ul class="space-y-1 text-sm">
@@ -22,7 +22,7 @@
     </div>
   @endif
 
-  {{-- form --}}
+  {{-- edit form --}}
   <form
     method="POST"
     action="{{ route('admin.revolutions.update', $revolution) }}"
@@ -32,6 +32,7 @@
     @csrf
     @method('PUT')
 
+    {{-- label input --}}
     <div>
       <label class="block text-sm font-medium text-white">Label</label>
       <input
@@ -42,6 +43,7 @@
       >
     </div>
 
+    {{-- title input --}}
     <div>
       <label class="block text-sm font-medium text-white">Title</label>
       <input
@@ -52,6 +54,7 @@
       >
     </div>
 
+    {{-- years input --}}
     <div>
       <label class="block text-sm font-medium text-white">Years</label>
       <input
@@ -62,6 +65,7 @@
       >
     </div>
 
+    {{-- summary input --}}
     <div>
       <label class="block text-sm font-medium text-white">Summary</label>
       <textarea
@@ -71,6 +75,7 @@
       >{{ old('summary', $revolution->summary) }}</textarea>
     </div>
 
+    {{-- hero image upload --}}
     <div>
       <label class="block text-sm font-medium text-white">Hero image</label>
       <input
@@ -79,6 +84,7 @@
         class="mt-2 w-full text-sm text-[#A3A3A3]"
       >
 
+      {{-- show existing image --}}
       @if($revolution->hero_image)
         <img
           src="{{ asset('storage/' . $revolution->hero_image) }}"
@@ -88,6 +94,7 @@
       @endif
     </div>
 
+    {{-- form actions --}}
     <div class="flex gap-3">
       <button
         type="submit"

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
+    // shared data for page views
     private function base(): array
     {
         return [
@@ -18,6 +19,7 @@ class AppController extends Controller
         ];
     }
 
+    // show home page
     public function home()
     {
         return view('pages.home', [
@@ -26,6 +28,7 @@ class AppController extends Controller
         ]);
     }
 
+    // show all revolutions
     public function explore()
     {
         return view('pages.explore', [
@@ -35,20 +38,24 @@ class AppController extends Controller
         ]);
     }
 
+    // show one revolution overview
     public function revolution(string $id)
     {
         $revolution = Revolution::with('sections')
             ->where('slug', $id)
             ->firstOrFail();
 
+        // build section menu
         $categories = $revolution->sections
             ->pluck('section_title', 'section_key')
             ->toArray();
 
+        // build section content map
         $content = $revolution->sections
             ->pluck('body', 'section_key')
             ->toArray();
 
+        // prepare revolution data
         $revolutionData = [
             'id' => $revolution->slug,
             'label' => $revolution->label,
@@ -67,20 +74,24 @@ class AppController extends Controller
         ]);
     }
 
+    // show one revolution section
     public function revolutionSection(string $id, string $section)
     {
         $revolution = Revolution::with(['sections.images'])
             ->where('slug', $id)
             ->firstOrFail();
 
+        // find selected section
         $sectionRecord = $revolution->sections->firstWhere('section_key', $section);
 
         abort_unless($sectionRecord, 404);
 
+        // build section menu
         $categories = $revolution->sections
             ->pluck('section_title', 'section_key')
             ->toArray();
 
+        // prepare revolution data
         $revolutionData = [
             'id' => $revolution->slug,
             'label' => $revolution->label,
@@ -102,20 +113,24 @@ class AppController extends Controller
         ]);
     }
 
+    // show comparison page
     public function compare(Request $request)
     {
         $revolutions = Revolution::with('sections')->orderBy('id')->get();
 
+        // get selected revolutions
         $leftId = $request->query('left', 'ir1');
         $rightId = $request->query('right', 'ir4');
 
         $left = $revolutions->firstWhere('slug', $leftId) ?? $revolutions->first();
         $right = $revolutions->firstWhere('slug', $rightId) ?? $revolutions->skip(1)->first() ?? $left;
 
+        // avoid comparing the same revolution
         if ($left->slug === $right->slug) {
             $right = $revolutions->firstWhere('slug', 'ir4') ?? $revolutions->skip(1)->first() ?? $left;
         }
 
+        // prepare left panel data
         $leftData = [
             'id' => $left->slug,
             'label' => $left->label,
@@ -125,6 +140,7 @@ class AppController extends Controller
             'content' => $left->sections->pluck('body', 'section_key')->toArray(),
         ];
 
+        // prepare right panel data
         $rightData = [
             'id' => $right->slug,
             'label' => $right->label,
@@ -134,6 +150,7 @@ class AppController extends Controller
             'content' => $right->sections->pluck('body', 'section_key')->toArray(),
         ];
 
+        // use left revolution sections as categories
         $categories = $left->sections->pluck('section_title', 'section_key')->toArray();
 
         return view('pages.compare', [
@@ -152,6 +169,7 @@ class AppController extends Controller
         ]);
     }
 
+    // show criteria page
     public function criteria()
     {
         return view('pages.criteria', [
@@ -161,12 +179,14 @@ class AppController extends Controller
         ]);
     }
 
+    // show evaluation page
     public function evaluation()
     {
         $criteria = Criterion::orderBy('id')->get();
 
         $evaluations = Evaluation::orderBy('revolution')->orderBy('id')->get();
 
+        // map evaluations by criterion and revolution
         $evaluationMap = $evaluations->keyBy(function ($item) {
             return strtolower(trim($item->criterion)) . '|' . strtolower(trim($item->revolution));
         });
@@ -179,6 +199,7 @@ class AppController extends Controller
         ]);
     }
 
+    // show glossary page
     public function glossary()
     {
         return view('pages.glossary', [

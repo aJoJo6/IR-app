@@ -58,23 +58,23 @@
 
 {{-- accordion script --}}
 <script>
-function toggleAccordion(index) {
-  const content = document.getElementById(`content-${index}`);
-  const icon = document.getElementById(`icon-${index}`);
-  const isOpen = !content.classList.contains('hidden');
+function toggleAccordion(index) { // toggle accordion by index
+  const content = document.getElementById(`content-${index}`); // get content element
+  const icon = document.getElementById(`icon-${index}`); // get icon element
+  const isOpen = !content.classList.contains('hidden'); // check if open
 
-  document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('[id^="icon-"]').forEach(el => el.innerText = '+');
+  document.querySelectorAll('[id^="content-"]').forEach(el => el.classList.add('hidden')); // hide all content
+  document.querySelectorAll('[id^="icon-"]').forEach(el => el.innerText = '+'); // reset all icons
 
-  if (!isOpen) {
-    content.classList.remove('hidden');
-    icon.innerText = '−';
+  if (!isOpen) { // if not already open
+    content.classList.remove('hidden'); // show selected content
+    icon.innerText = '−'; // set icon to minus
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  @if($criteriaBlocks->isNotEmpty())
-    toggleAccordion(0);
+document.addEventListener('DOMContentLoaded', () => { // run when page loads
+  @if($criteriaBlocks->isNotEmpty()) // check if data exists
+    toggleAccordion(0); // open first item
   @endif
 });
 </script>
